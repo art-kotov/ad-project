@@ -9,7 +9,7 @@
         <h1 class="text--secondary mb-3">
           Orders
         </h1>
-        <v-divider class="mb-3"/>
+        <v-divider class="mb-3" />
         <v-list
           subheader
           two-line

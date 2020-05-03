@@ -41,8 +41,8 @@
         >
           <v-icon
             left
-            v-text="link.icon"
             class="hidden-md-and-down"
+            v-text="link.icon"
           />
           {{ link.title }}
         </v-btn>
@@ -51,24 +51,60 @@
     <v-content>
       <router-view />
     </v-content>
+    <v-snackbar
+      v-model="snackbar"
+      :multi-line="true"
+      @input="closeBar"
+    >
+      {{ error }}
+      <v-btn
+        color="red"
+        text
+        @click="closeBar"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 
 <script>
-export default {
-  name: 'App',
-  data() {
-    return {
-      drawer: false,
-      links: [
-        {title: 'Home', icon: 'mdi-home', url: '/'},
-        {title: 'Login', icon: 'mdi-lock', url: '/login'},
-        {title: 'Registration', icon: 'mdi-face', url: '/registration'},
-        {title: 'Orders', icon: 'mdi-bookmark', url: '/orders'},
-        {title: 'New ad', icon: 'mdi-file-plus', url: '/new'},
-        {title: 'My ads', icon: 'mdi-format-list-text', url: '/list'},
-      ]
+  import {mapActions, mapGetters} from "vuex";
+
+  export default {
+    name: 'App',
+    data() {
+      return {
+        drawer: false,
+      }
+    },
+    computed: {
+      ...mapGetters(["error"]),
+      ...mapGetters("user", ["isUserLoggedIn"]),
+      snackbar() {
+        return !!this.error
+      },
+      links() {
+        if(this.isUserLoggedIn) {
+          return [
+            {title: 'Home', icon: 'mdi-home', url: '/'},
+            {title: 'Orders', icon: 'mdi-bookmark', url: '/orders'},
+            {title: 'New ad', icon: 'mdi-file-plus', url: '/new'},
+            {title: 'My ads', icon: 'mdi-format-list-text', url: '/list'},
+          ]
+        } else {
+          return  [
+            {title: 'Login', icon: 'mdi-lock', url: '/login'},
+            {title: 'Registration', icon: 'mdi-face', url: '/registration'},
+          ]
+        }
+      }
+    },
+    methods: {
+      ...mapActions(["clearError"]),
+      closeBar() {
+        this.clearError();
+      }
     }
-  }
-};
+  };
 </script>

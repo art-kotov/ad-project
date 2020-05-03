@@ -57,7 +57,8 @@
             <v-spacer />
             <v-btn
               color="primary"
-              :disabled="!valid"
+              :disabled="!valid || loading"
+              :loading="loading"
               @click="onSubmit"
             >
               Create account!
@@ -70,6 +71,8 @@
 </template>
 
 <script>
+  import {mapActions, mapGetters} from "vuex";
+
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 
   export default {
@@ -93,7 +96,14 @@
         ]
       }
     },
+    computed: {
+      ...mapGetters(["loading"])
+    },
     methods: {
+      ...mapActions("user", {
+        register: 'registerUser'
+      }),
+
       onSubmit () {
         if (this.$refs.form.validate()) {
           const user = {
@@ -101,7 +111,11 @@
             password: this.password
           }
 
-          console.log(user)
+          this.register(user)
+          .then(() => {
+            this.$router.push("/")
+          })
+          .catch(err => console.log(err))
         }
       }
     }
