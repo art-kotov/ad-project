@@ -46,6 +46,19 @@
           />
           {{ link.title }}
         </v-btn>
+        <v-btn
+          v-if="isUserLoggedIn"
+          text
+          @click="logout"
+        >
+          <v-icon
+            left
+            class="hidden-md-and-down"
+          >
+            mdi-logout
+          </v-icon>
+          Logout
+        </v-btn>
       </v-toolbar-items>
     </v-app-bar>
     <v-content>
@@ -102,8 +115,13 @@
     },
     methods: {
       ...mapActions(["clearError"]),
+      ...mapActions("user", ["logoutUser"]),
       closeBar() {
         this.clearError();
+      },
+      logout() {
+        this.logoutUser()
+        this.$router.push("/")
       }
     }
   };

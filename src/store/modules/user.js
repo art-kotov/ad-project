@@ -41,6 +41,10 @@ const actions = {
   },
   autoLoginUser: ({commit}, payload) => {
     commit("setUser", payload.uid)
+  },
+  logoutUser: ({commit}) => {
+    firebase.auth().signOut()
+    commit("setUser", null)
   }
 }
 

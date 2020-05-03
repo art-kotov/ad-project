@@ -66,6 +66,7 @@
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 
   export default {
+
     data () {
       return {
         email: '',
@@ -82,12 +83,18 @@
       }
     },
     computed: {
-      ...mapGetters(["loading"])
+      ...mapGetters(["loading"]),
+    },
+    created() {
+      if(this.$route.query['loginError']) {
+        this.setError('Please Log in to access this page')
+      }
     },
     methods: {
       ...mapActions("user", {
         login: "loginUser"
       }),
+      ...mapActions(["setError"]),
       onSubmit () {
         if (this.$refs.form.validate()) {
           const user = {
